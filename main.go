@@ -16,6 +16,11 @@ func main() {
 	parent := getEnvRequired("PIPELOG_GCP_PARENT")
 	logName := getEnvRequired("PIPELOG_GCP_NAME")
 
+	log.Printf("pipelog")
+	log.Printf("mode: GCP")
+	log.Printf("parent: %s", parent)
+	log.Printf("log_name: %s", logName)
+
 	client, err := logging.NewClient(ctx, parent)
 	if err != nil {
 		log.Fatalf("can not create log client; %v", err)
