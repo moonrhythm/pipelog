@@ -1,8 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"context"
-	"io"
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -29,7 +30,15 @@ func main() {
 
 	logger := client.Logger(logName).StandardLogger(logging.Info)
 
-	io.Copy(io.MultiWriter(os.Stdout, logger.Writer()), os.Stdin)
+	r := bufio.NewReader(os.Stdin)
+	for {
+		l, _, err := r.ReadLine()
+		if err != nil {
+			return
+		}
+		fmt.Println(string(l))
+		logger.Println(string(l))
+	}
 }
 
 func getEnvRequired(name string) string {
