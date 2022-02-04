@@ -24,8 +24,7 @@ func main() {
 
 	logger := client.Logger(logName).StandardLogger(logging.Info)
 
-	go io.Copy(os.Stdout, os.Stdin)
-	io.Copy(logger.Writer(), os.Stdin)
+	io.Copy(io.MultiWriter(os.Stdout, logger.Writer()), os.Stdin)
 }
 
 func getEnvRequired(name string) string {
