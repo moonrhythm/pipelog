@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -28,7 +29,7 @@ func main() {
 	}
 	defer client.Close()
 
-	logger := client.Logger(logName).StandardLogger(logging.Info)
+	logger := client.Logger(logName)
 
 	r := bufio.NewReader(os.Stdin)
 	for {
@@ -37,7 +38,16 @@ func main() {
 			return
 		}
 		fmt.Println(string(l))
-		logger.Println(string(l))
+
+		e := logging.Entry{
+			Severity: logging.Info,
+		}
+		if json.Valid(l) {
+			e.Payload = json.RawMessage(l)
+		} else {
+			e.Payload = string(l)
+		}
+		logger.Log(e)
 	}
 }
 
